@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Stop Watch</title>
+</head>
+<body>
+<h1>Stop Watch</h1>
+<select id="selectTime">
+<option value="1">1分</option>
+<option value="5">5分</option>
+<option value="10">10分</option>
+<option value="20">20分</option>
+<option value="30">30分</option>
+<option value="40">40分</option>
+<option value="50">50分</option>
+<option value="60">60分</option>
+</select>
+<div id="timeText"></div>
+<input id="start" type="button" value="start" onclick="start();">
+<input id="stop" type="button" value="stop" onclick="stop();" disabled>
+<script type="text/javascript">
+var timerID;
+var timer = 0;
+var setupTime = 0;
+var startTime;
+function start() {
+  document.getElementById("stop").disabled = "";
+  document.getElementById("start").disabled = true;
+  startTime = new Date();
+  setupTime = document.getElementById("selectTime").value;
+	timerID = setInterval('count()',1000);//1秒に1回実行
+}
+
+function stop() {
+	document.getElementById("stop").disabled = true;
+  document.getElementById("start").disabled = "";
+  clearInterval(timerID);
+}
+
+function count() {
+  var stopTime = new Date();
+  var elapsedTime = stopTime.getTime() - startTime.getTime();
+  var hour = Math.floor(elapsedTime/(60*60*1000));//時
+  elapsedTime = elapsedTime-(hour*60*60*1000);
+  var minute = Math.floor(elapsedTime/(60*1000));
+  elapsedTime = elapsedTime-(minute*60*1000);
+  var second = Math.floor(elapsedTime/1000);
+  document.getElementById('timeText').innerText = minute + ":" + second;
+  var timeText = document.getElementById('timeText');
+  if (setupTime == minute)  {
+    notification(setupTime);
+    stop();
+  }
+}
+
+function notification(setupTime) {
+  var n = new Notification('Stop Watch', {
+    body: setupTime + '分経過しました'
+  });
+}
+</script>
+</body>
+</html>
